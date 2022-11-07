@@ -3,7 +3,7 @@ import math
 import json
 import os
 
-langName = 'en-full'
+langName = 'en'
 
 folderPathsToTranslate = [
     ("./overlay/ja", "./overlay/" + langName, "./overlay/en-deepl", "./overlay/en-og", "./overlay/data"),
@@ -143,7 +143,8 @@ def translateText(japaneseText, translatedText, originalTranslation, filename, i
         if (not isOverlay): # Length restriction is not present in non-overlay texts
             return translatedText.translate(deUnifiedText)
         else:
-            if (len(originalTranslation)+8 >= len(translatedText)):
+            # Overlay translations need to be shortened due to limited space
+            if (len(originalTranslation)+11 >= len(translatedText)):
                 return translatedText.translate(deUnifiedText) # Length limit for overlay
             elif (len(originalTranslation)+3 >= len(translatedText)):
                 return translatedText.translate(deUnifiedText) # If the ... is not needed, just return the whole text
