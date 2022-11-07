@@ -82,7 +82,33 @@ whitelistedUnicode = [
     '°C'
 ]
 
-deUnifiedText = {
+deUnifiedText = str.maketrans({
+    'Ａ': 'A',
+    'Ｂ': 'B',
+    'Ｃ': 'C',
+    'Ｄ': 'D',
+    'Ｅ': 'E',
+    'Ｆ': 'F',
+    'Ｇ': 'G',
+    'Ｈ': 'H',
+    'Ｉ': 'I',
+    'Ｊ': 'J',
+    'Ｋ': 'K',
+    'Ｌ': 'L',
+    'Ｍ': 'M',
+    'Ｎ': 'N',
+    'Ｏ': 'O',
+    'Ｐ': 'P',
+    'Ｑ': 'Q',
+    'Ｒ': 'R',
+    'Ｓ': 'S',
+    'Ｔ': 'T',
+    'Ｕ': 'U',
+    'Ｖ': 'V',
+    'Ｗ': 'W',
+    'Ｘ': 'X',
+    'Ｙ': 'Y',
+    'Ｚ': 'Z',
     '０': '0',
     '１': '1',
     '２': '2',
@@ -93,6 +119,17 @@ deUnifiedText = {
     '７': '7',
     '８': '8',
     '９': '9'
+})
+
+shortenedText = {
+    ' Hours': 'hrs',
+    ' Minutes': 'mins',
+    ' Seconds': 'sec',
+    ' hours': 'hrs',
+    ' minutes': 'mins',
+    ' seconds': 'sec',
+    ' hour': 'hr',
+    ' Hour': 'hr'
 }
 
 def whitelistText(text):
@@ -135,14 +172,24 @@ def translateText(japaneseText, translatedText, originalTranslation, filename, i
 
         print(japaneseText.replace('\n', '\\n'), "->", translatedText.replace('\n', '\\n'))
 
-        if ('sec' in filename):
-            return toBullet(translatedText.replace('\n', ''), pointChar='', pointLength=25)
+        if ('sec' in filename): # Translate self-check quiz
+            translatedText = toBullet(translatedText.replace('\n', ''), pointChar='', pointLength=25)
+
+            for textToShorten in shortenedText.keys():
+                translatedText.replace(textToShorten, shortenedText[textToShorten])
+
         elif ("■" in translatedText):
             return toBullet(translatedText)
 
         if (not isOverlay): # Length restriction is not present in non-overlay texts
             return translatedText.translate(deUnifiedText)
         else:
+            # Shorten overlay text
+            for textToShorten in shortenedText.keys():
+                translatedText.replace(textToShorten, shortenedText[textToShorten])
+            if (translatedText[-1] == '.' and translatedText[-2] != '.'):
+                translatedText = translatedText[:-1]
+
             # Overlay translations need to be shortened due to limited space
             if (len(originalTranslation)+11 >= len(translatedText)):
                 return translatedText.translate(deUnifiedText) # Length limit for overlay
@@ -152,7 +199,7 @@ def translateText(japaneseText, translatedText, originalTranslation, filename, i
                 return (translatedText[:round(len(originalTranslation))] + '...').translate(deUnifiedText) # Remove unicode from text
 
     else: # If there is already a translation available
-        return originalTranslation
+        return originalTranslation.translate(deUnifiedText) # Still remove unicode anyway
 
 for folderPathToTranslate in folderPathsToTranslate:
     for folderTree in os.walk(folderPathToTranslate[0]):
