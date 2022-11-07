@@ -1,3 +1,9 @@
 */__pycache__
 *.bat
 *.nds
+*.sav
+secrets.json
+tmp.py
+en-og
+en-deepl
+en-full
