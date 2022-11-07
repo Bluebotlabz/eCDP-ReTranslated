@@ -91,11 +91,14 @@ def main(lang, rom_data, working_dir):
 				
 		return None
 
-	def apply_mods(name):
+	def apply_mods(name, nameIndex):
 		section = json.loads(open(working_dir + "/data/" + name, "rb").read())
 		text = json.loads(open(working_dir + "/" + lang + "/" + name, "rb").read())
 
+		i = 0
 		for string in section["strings"]:
+			i += 1
+			print(str(i) + "/" + str(len(section["strings"])) + " -- (" + str(nameIndex) + "/" + str(len(json_names)) + ")")
 			old_text = string["str"]
 			old_blen = string["blen"]
 			rom_addr = string["rom_address"]
@@ -139,8 +142,10 @@ def main(lang, rom_data, working_dir):
 
 
 	read_jsons(working_dir + "/files.json")
+	nameIndex = 0
 	for name in json_names:
-		apply_mods(name)
+		nameIndex += 1
+		apply_mods(name, nameIndex)
 	
 	return rom_data
 
