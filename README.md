@@ -1,4 +1,7 @@
 # eCrew Development Program (eCDP) English Translation
+This was a fork designed to translate the entire ROM using DeepL
+It worked... somewhat...
+
 This is a repository to create a fan English translation patch of McDonald's [eCrew Development Program](https://en.wikipedia.org/wiki/ECrew_Development_Program).
 
 ## Repository Structure
